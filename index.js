@@ -10,6 +10,8 @@ const inputs = document.querySelector(".word"),
 // Initializing game variables
 let word, incorrectLetters = [], correctLetters = [], maxGuesses;
 let unalphabeticalChar = 0;
+let timeoutId = undefined;
+let audio = undefined;
 
 // Disable hint button for 10 seconds
 function disableButton() {
@@ -18,7 +20,10 @@ function disableButton() {
     hintBtn.style.cursor = "not-allowed";
     hintBtn.style.opacity = "0.5";
 
-    setTimeout(function () {
+    // Disable previous timeout
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(function () {
         hintBtn.disabled = false;
 
         hintBtn.style.cursor = "pointer";
@@ -31,23 +36,25 @@ function disableButton() {
 // Function who start the audio at the beginning of the game
 function startAudio(link) {
     const audio = new Audio(link);
-    audio.muted =false;
+    audio.muted = false;
     audio.play();
 
     return audio;
 }
 
 // Function who stop the audio at the end of the game
-function stopAudio(audio) {
-    audio.muted = true;
-    audio.pause();
+function stopAudio(audioPlayed) {
+    audioPlayed.muted = true;
+    audioPlayed.pause();
 }
 
 // Select random word from word list and setting up the game
 function startGame() {
-
     // Disable hint button for 10 seconds
     disableButton();
+
+    // Stop the previous audio
+    if (audio !== undefined) stopAudio(audio);
 
     alert("New Game Started ! Guess new word");
 
@@ -165,5 +172,6 @@ inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
 alert("Guess The Cartoon by pressing the guess button !");
+
 // Start game
 startGame();
