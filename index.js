@@ -11,8 +11,29 @@ const inputs = document.querySelector(".word"),
 let word, incorrectLetters = [], correctLetters = [], maxGuesses;
 let unalphabeticalChar = 0;
 
+// Disable hint button for 10 seconds
+function disableButton() {
+    hintBtn.disabled = true;
+
+    hintBtn.style.cursor = "not-allowed";
+    hintBtn.style.opacity = "0.5";
+
+    setTimeout(function () {
+        hintBtn.disabled = false;
+
+        hintBtn.style.cursor = "pointer";
+        hintBtn.style.opacity = "1";
+
+
+    }, 10000); // réactive le bouton après 10 secondes
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
+
+    // Disable hint button for 10 seconds
+    disableButton();
+
     alert("New Game Started ! Guess new word");
 
     unalphabeticalChar = 0;
