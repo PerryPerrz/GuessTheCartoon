@@ -28,6 +28,21 @@ function disableButton() {
     }, 10000); // réactive le bouton après 10 secondes
 }
 
+// Function who start the audio at the beginning of the game
+function startAudio(link) {
+    const audio = new Audio(link);
+    audio.muted =false;
+    audio.play();
+
+    return audio;
+}
+
+// Function who stop the audio at the end of the game
+function stopAudio(audio) {
+    audio.muted = true;
+    audio.pause();
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
 
@@ -47,6 +62,9 @@ function startGame() {
     // Choose random word from word list and set up game
     const randWord = cartoonList[Math.floor(Math.random() * cartoonList.length)];
     word = randWord.word;
+
+    // Start the audio
+    audio = startAudio(randWord.audio);
 
     maxGuesses = word.length >= 5 ? 8 : 6;
 
@@ -112,10 +130,13 @@ function handleInput(e) {
 
     // Update remain guess and check for win/lose conditions
     guessLeft.innerText = maxGuesses;
-    console.log(correctLetters.length, word.length);
-    console.log(unalphabeticalChar);
     if (correctLetters.length === word.length - unalphabeticalChar) {
         alert(`You found the word ! It was ${word.toUpperCase()}`);
+
+        // Stop the audio
+        stopAudio(audio);
+
+        // Start new game
         startGame();
     } else if (maxGuesses < 1) {
         alert("You lost ! You don't have remaining guesses");
@@ -143,5 +164,6 @@ typeInput.addEventListener("input", handleInput);
 inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
+alert("Guess The Cartoon by pressing the guess button !");
 // Start game
 startGame();

@@ -5,7 +5,8 @@ let cartoonList = [
   },
   {
     word: "les chevaliers du zodiaque",
-    hint: "Proteger la deesse Athena et vaincre tous les ennemis"
+    hint: "Proteger la deesse Athena et vaincre tous les ennemis",
+    audio: "/assets/audio/les-chevaliers-du-zodiaque.mp3"
   },
   {
     word: "les mysterieuses cites d'or",
