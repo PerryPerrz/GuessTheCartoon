@@ -1,6 +1,6 @@
 let cartoonList = [
   {
-    word: "astro,lepetitrobot",
+    word: "astro, le petit robot",
     hint: "Les voilà, les voilà, les heros de l'espace",
     audio: "assets/audio/astro-lepetitrobot.mp3"
   },
@@ -188,5 +188,15 @@ let cartoonList = [
     word: "code lyoko",
     hint: "Un monde virtuel (sans danger) pour sauver le monde réel",
     audio: "assets/audio/code-lyoko.mp3"
+  },
+  {
+    word: "les simpson",
+    hint: "La famille la plus déjantée de la télévision",
+    audio: "assets/audio/les_simpson.mp3"
+  },
+  {
+    word: "phineas et ferb",
+    hint: "Deux frères et un ornithorynque",
+    audio: "assets/audio/phineas_et_ferb.mp3"
   },
 ];
