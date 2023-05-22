@@ -2,6 +2,7 @@ const inputs = document.querySelector(".word"),
     hintTag = document.querySelector(".hint span"),
     guessLeft = document.querySelector(".guess span"),
     mistakes = document.querySelector(".wrong span"),
+    score = document.querySelector(".score span"),
     resetBtn = document.querySelector(".reset"),
     hintBtn = document.querySelector(".showhint"),
     hintElement = document.querySelector(".hint"),
@@ -13,6 +14,7 @@ let word, incorrectLetters = [], correctLetters = [], maxGuesses;
 let unalphabeticalChar = 0;
 let timeoutId = undefined;
 let audio = undefined;
+let scoreValue = 0;
 
 // Disable hint button for 10 seconds
 function disableButton() {
@@ -88,6 +90,7 @@ function startGame() {
     hintTag.innerText = randWord.hint;
     guessLeft.innerText = maxGuesses;
     mistakes.innerText = incorrectLetters;
+    score.innerText = scoreValue;
 
     // Create input for each letter
     inputs.innerHTML = "";
@@ -152,11 +155,17 @@ function handleInput(e) {
         // Stop the audio
         stopAudio(audio);
 
+        // Update score
+        scoreValue += 1;
+
         // Start new game
         startGame();
     } else if (maxGuesses < 1) {
         alert("You lost ! You don't have remaining guesses");
 
+        // Reset score
+        scoreValue = 0;
+        
         for (let i = 0; i < word.length; i++) {
             // Fill inputs with correct words
             inputs.querySelectorAll("input")[i].value = word[i];
