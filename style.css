@@ -133,9 +133,18 @@ body {
     }
 }
 
-.footer {
+.footer, #slider {
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#slider {
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: none;
+    opacity: 0.7;
+    margin-top: 10px;
 }

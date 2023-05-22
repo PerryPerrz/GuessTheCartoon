@@ -5,7 +5,8 @@ const inputs = document.querySelector(".word"),
     resetBtn = document.querySelector(".reset"),
     hintBtn = document.querySelector(".showhint"),
     hintElement = document.querySelector(".hint"),
-    typeInput = document.querySelector(".type-input");
+    typeInput = document.querySelector(".type-input"),
+    slider = document.querySelector(".mySlider");
 
 // Initializing game variables
 let word, incorrectLetters = [], correctLetters = [], maxGuesses;
@@ -48,6 +49,11 @@ function stopAudio(audioPlayed) {
     audioPlayed.pause();
 }
 
+// Function who change the volume of the audio
+function audioVolume() {
+    audio.volume = slider.value / 100;
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
     // Disable hint button for 10 seconds
@@ -72,6 +78,9 @@ function startGame() {
 
     // Start the audio
     audio = startAudio(randWord.audio);
+
+    // Keep the current audio's volume
+    audioVolume();
 
     maxGuesses = word.length >= 5 ? 8 : 6;
 
@@ -168,6 +177,7 @@ function showHintElement() {
 resetBtn.addEventListener("click", startGame);
 hintBtn.addEventListener("click", showHintElement);
 typeInput.addEventListener("input", handleInput);
+slider.addEventListener("input", audioVolume);
 inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
