@@ -80,6 +80,7 @@ function startGame() {
     disableButton();
 
     // Reset timer
+    timerInterval = clearInterval(timerInterval);
     countdown = 20;
 
     // Stop the previous audio
