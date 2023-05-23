@@ -7,7 +7,8 @@ const inputs = document.querySelector(".word"),
     hintBtn = document.querySelector(".showhint"),
     hintElement = document.querySelector(".hint"),
     typeInput = document.querySelector(".type-input"),
-    slider = document.querySelector(".mySlider");
+    slider = document.querySelector(".mySlider"),
+    timer = document.querySelector(".timer span");
 
 // Initializing game variables
 let word, incorrectLetters = [], correctLetters = [], maxGuesses;
@@ -15,6 +16,23 @@ let unalphabeticalChar = 0;
 let timeoutId = undefined;
 let audio = undefined;
 let scoreValue = 0;
+let countdown = undefined;
+let timerInterval = undefined;
+
+// Function who update the timer
+function updateTime() {
+    timer.innerText = countdown;
+
+    // Vérification si le timer est écoulé
+    if (countdown === 0) {
+        clearInterval(timerInterval);
+        alert("Le temps est écoulé !")
+
+        startGame();
+    } else {
+        countdown--;
+    }
+}
 
 // Disable hint button for 10 seconds
 function disableButton() {
@@ -61,10 +79,16 @@ function startGame() {
     // Disable hint button for 10 seconds
     disableButton();
 
+    // Reset timer
+    countdown = 20;
+
     // Stop the previous audio
     if (audio !== undefined) stopAudio(audio);
 
     alert("New Game Started ! Guess new word");
+
+    // Lancement du timer toutes les secondes (1000 millisecondes)
+    timerInterval = setInterval(updateTime, 1000);
 
     unalphabeticalChar = 0;
     incorrectLetters = [];
@@ -165,7 +189,7 @@ function handleInput(e) {
 
         // Reset score
         scoreValue = 0;
-        
+
         for (let i = 0; i < word.length; i++) {
             // Fill inputs with correct words
             inputs.querySelectorAll("input")[i].value = word[i];
