@@ -13,6 +13,13 @@
 <body>
     <div class="wrapper">
         <h1>Guess The Cartoon</h1>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span> <!-- Bouton de fermeture -->
+                <h2 id="modalTitle">Titre de la fenêtre modale</h2>
+                <p id="modalText">Contenu de la fenêtre modale.</p>
+            </div>
+        </div>
         <div class="content">
             <input type="text" class="type-input" maxlength="1">
             <div class="word"></div>

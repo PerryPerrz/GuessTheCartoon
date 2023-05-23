@@ -26,7 +26,8 @@ function updateTime() {
     // Vérification si le timer est écoulé
     if (countdown === 0) {
         clearInterval(timerInterval);
-        alert("Le temps est écoulé !")
+
+        openModal("Game Over", "The time is up !");
 
         startGame();
     } else {
@@ -74,6 +75,37 @@ function audioVolume() {
     audio.volume = slider.value / 100;
 }
 
+// Function who open the modal
+function openModal(title, text) {
+    var modal = document.getElementById("myModal");
+    var modalTitle = document.getElementById("modalTitle");
+    var modalText = document.getElementById("modalText");
+
+    modalTitle.textContent = title;
+    modalText.textContent = text;
+    modal.style.display = "block";
+
+    // Ajout d'un écouteur d'événements pour la touche "Entrée"
+    document.addEventListener("keydown", handleKeyPress);
+}
+
+// Function who close the modal
+function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+
+    // Suppression de l'écouteur d'événements pour la touche "Entrée"
+    document.removeEventListener("keydown", handleKeyPress);
+}
+
+// Function who close the modal when the user click on the enter key
+function handleKeyPress(event) {
+    // Vérification si la touche appuyée est "Entrée" ou "Echap"
+    if (event.keyCode === 13 || event.keyCode === 27) {
+        closeModal();
+    }
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
     // Disable hint button for 10 seconds
@@ -86,7 +118,7 @@ function startGame() {
     // Stop the previous audio
     if (audio !== undefined) stopAudio(audio);
 
-    alert("New Game Started ! Guess new word");
+    openModal("New Game Started !", "Guess new word !");
 
     // Lancement du timer toutes les secondes (1000 millisecondes)
     timerInterval = setInterval(updateTime, 1000);
@@ -175,7 +207,7 @@ function handleInput(e) {
     // Update remain guess and check for win/lose conditions
     guessLeft.innerText = maxGuesses;
     if (correctLetters.length === word.length - unalphabeticalChar) {
-        alert(`You found the word ! It was ${word.toUpperCase()}`);
+        openModal("You Win !", `You found the word ! It was ${word.toUpperCase()}`);
 
         // Stop the audio
         stopAudio(audio);
@@ -186,7 +218,7 @@ function handleInput(e) {
         // Start new game
         startGame();
     } else if (maxGuesses < 1) {
-        alert("You lost ! You don't have remaining guesses");
+        openModal("You Lost !", "You don't have remaining guesses. Try again !");
 
         // Reset score
         scoreValue = 0;
@@ -215,7 +247,7 @@ slider.addEventListener("input", audioVolume);
 inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
-alert("Guess The Cartoon by pressing the guess button !");
+openModal("Welcome !", "Guess the cartoon by pressing the guess button !");
 
 // Start game
 startGame();
