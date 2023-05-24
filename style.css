@@ -196,3 +196,8 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+em {
+    font-size: small;
+    color: #999;
+}
