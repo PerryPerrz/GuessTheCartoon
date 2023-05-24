@@ -8,7 +8,8 @@ const inputs = document.querySelector(".word"),
     hintElement = document.querySelector(".hint"),
     typeInput = document.querySelector(".type-input"),
     slider = document.querySelector(".mySlider"),
-    timer = document.querySelector(".timer span");
+    timer = document.querySelector(".timer span"),
+    cartoonNum = document.querySelector(".cartoon span");
 
 // Initializing game variables
 let word, incorrectLetters = [], correctLetters = [], maxGuesses;
@@ -21,6 +22,9 @@ let timerInterval = undefined;
 let randWord = undefined;
 let picture = undefined;
 var modalQueue = []; // File d'attente pour les modales
+let isModalOpen = false;
+let cartoonsGuessedList = [];
+let cartoonsListSize = cartoonList.length;
 
 // Function who update the timer
 function updateTime() {
@@ -32,7 +36,16 @@ function updateTime() {
 
         openModalQueue("Game Over", "The time is up !", false);
 
-        startGame();
+        scoreValue = 0;
+        score.innerText = scoreValue;
+
+        // Utilisation de l'attente avec async/await
+        (async function () {
+            await attendreBoolenTrue();
+
+            // Start game
+            startGame();
+        })();
     } else {
         countdown--;
     }
@@ -80,6 +93,7 @@ function audioVolume() {
 
 // Fonction pour ouvrir une fenêtre modale et ajouter à la file d'attente
 function openModalQueue(title, text, isVictoryModal) {
+    isModalOpen = true;
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
 
@@ -105,10 +119,10 @@ function nextModal() {
     if (modalQueue.length > 0) {
         openModal();
     } else {
+        isModalOpen = false;
         closeModal();
     }
 }
-
 
 // Fonction pour ouvrir une fenêtre modale
 function openModal(isVictoryModal) {
@@ -164,6 +178,36 @@ function resetPicture() {
     picture.alt = "";
 }
 
+function attendreBoolenTrue() {
+    return new Promise(function (resolve) {
+        if (isModalOpen === false) {
+            resolve();
+        } else {
+            var interval = setInterval(function () {
+                if (isModalOpen === false) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, 100); // Vérification toutes les 100 millisecondes
+        }
+    });
+}
+
+function launchGuess() {
+    openModalQueue("New Game Started !", "Guess new word !", false);
+
+    scoreValue = 0;
+    score.innerText = scoreValue;
+
+    // Utilisation de l'attente avec async/await
+    (async function () {
+        await attendreBoolenTrue();
+
+        // Start game
+        startGame();
+    })();
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
     // Disable hint button for 10 seconds
@@ -176,8 +220,6 @@ function startGame() {
     // Stop the previous audio
     if (audio !== undefined) stopAudio(audio);
 
-    openModalQueue("New Game Started !", "Guess new word !", false);
-
     // Lancement du timer toutes les secondes (1000 millisecondes)
     timerInterval = setInterval(updateTime, 1000);
 
@@ -189,8 +231,18 @@ function startGame() {
     hintElement.style.display = "none";
     hintElement.style.opacity = "0";
 
+    // Reset the cartoon's list if it's empty
+    if (cartoonList.length === 0) {
+        cartoonList = cartoonsGuessedList;
+        cartoonsGuessedList = [];
+    }
+
     // Choose random word from word list and set up game
-    randWord = cartoonList[Math.floor(Math.random() * cartoonList.length)];
+    randWord = cartoonList.splice(Math.floor(Math.random() * cartoonList.length), 1)[0];
+    cartoonsGuessedList.push(randWord);
+
+    cartoonNum.innerText = cartoonsGuessedList.length + " / " + cartoonsListSize;
+
     word = randWord.word;
 
     // Start the audio
@@ -265,21 +317,36 @@ function handleInput(e) {
     // Update remain guess and check for win/lose conditions
     guessLeft.innerText = maxGuesses;
     if (correctLetters.length === word.length - unalphabeticalChar) {
+        // Stop the timer
+        timerInterval = clearInterval(timerInterval);
+
         openModalQueue("You Win !", `You found the word ! It was ${word.toUpperCase()}`, true);
 
-        // Stop the audio
-        stopAudio(audio);
+        openModalQueue("New Game Started !", "Guess new word !", false);
 
         // Update score
         scoreValue += 1;
+        score.innerText = scoreValue;
 
-        // Start new game
-        startGame();
+        // Utilisation de l'attente avec async/await
+        (async function () {
+            await attendreBoolenTrue();
+
+            // Stop the audio
+            stopAudio(audio);
+
+            // Start game
+            startGame();
+        })();
     } else if (maxGuesses < 1) {
+        // Stop the timer
+        timerInterval = clearInterval(timerInterval);
+
         openModalQueue("You Lost !", "You don't have remaining guesses. Try again !", false);
 
         // Reset score
         scoreValue = 0;
+        score.innerText = scoreValue;
 
         for (let i = 0; i < word.length; i++) {
             // Fill inputs with correct words
@@ -298,7 +365,7 @@ function showHintElement() {
 }
 
 // Setup event listeners
-resetBtn.addEventListener("click", startGame);
+resetBtn.addEventListener("click", launchGuess);
 hintBtn.addEventListener("click", showHintElement);
 typeInput.addEventListener("input", handleInput);
 slider.addEventListener("input", audioVolume);
@@ -307,5 +374,12 @@ document.addEventListener("keydown", () => typeInput.focus());
 
 openModalQueue("Welcome !", "Guess the cartoon by pressing the guess button !", false);
 
-// Start game
-startGame();
+openModalQueue("New Game Started !", "Guess new word !", false);
+
+// Utilisation de l'attente avec async/await
+(async function () {
+    await attendreBoolenTrue();
+
+    // Start game
+    startGame();
+})();
