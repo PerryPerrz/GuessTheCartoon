@@ -113,7 +113,7 @@ function nextModal() {
 // Fonction pour ouvrir une fenêtre modale
 function openModal(isVictoryModal) {
     // If it's a victory modal, display the picture
-    if(isVictoryModal) {
+    if (isVictoryModal) {
         displayPicture();
     }
 
