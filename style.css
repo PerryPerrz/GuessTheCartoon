@@ -173,7 +173,7 @@ body {
 /* Styles pour le contenu de la fenêtre modale */
 .modal-content {
     background-color: #fefefe;
-    margin: 21% auto;
+    margin: 7% auto;
     /* Centre la fenêtre modale verticalement et la laisse un peu décalée horizontalement */
     padding: 20px;
     border: 1px solid #888;
@@ -200,4 +200,9 @@ body {
 em {
     font-size: small;
     color: #999;
+}
+
+img {
+    width: 100%;
+    height: auto;
 }

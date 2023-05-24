@@ -18,6 +18,8 @@ let audio = undefined;
 let scoreValue = 0;
 let countdown = undefined;
 let timerInterval = undefined;
+let randWord = undefined;
+let picture = undefined;
 var modalQueue = []; // File d'attente pour les modales
 
 // Function who update the timer
@@ -28,7 +30,7 @@ function updateTime() {
     if (countdown === 0) {
         clearInterval(timerInterval);
 
-        openModalQueue("Game Over", "The time is up !");
+        openModalQueue("Game Over", "The time is up !", false);
 
         startGame();
     } else {
@@ -77,7 +79,7 @@ function audioVolume() {
 }
 
 // Fonction pour ouvrir une fenêtre modale et ajouter à la file d'attente
-function openModalQueue(title, text) {
+function openModalQueue(title, text, isVictoryModal) {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
 
@@ -86,11 +88,14 @@ function openModalQueue(title, text) {
         text: text
     }); // Ajouter à la file d'attente
 
-    openModal(); // Appeler directement la première modale
+    openModal(isVictoryModal); // Appeler directement la première modale
 }
 
 // Fonction pour passer à la prochaine fenêtre modale dans la file d'attente
 function nextModal() {
+    // Then we remove the picture
+    resetPicture();
+
     var modal = document.getElementById("myModal");
 
     // Retirer la première modale de la file d'attente
@@ -106,7 +111,12 @@ function nextModal() {
 
 
 // Fonction pour ouvrir une fenêtre modale
-function openModal() {
+function openModal(isVictoryModal) {
+    // If it's a victory modal, display the picture
+    if(isVictoryModal) {
+        displayPicture();
+    }
+
     var modalTitle = document.getElementById("modalTitle");
     var modalText = document.getElementById("modalText");
 
@@ -135,6 +145,25 @@ function handleKeyPress(event) {
     }
 }
 
+// Function who display the cartoon's picture
+function displayPicture() {
+    // Getting the cartoon's picture
+    picture = document.getElementById("picture");
+
+    // Display the picture
+    picture.src = randWord.picture;
+    picture.alt = randWord.word;
+}
+
+function resetPicture() {
+    // Getting the cartoon's picture
+    picture = document.getElementById("picture");
+
+    // Reset the picture
+    picture.src = "";
+    picture.alt = "";
+}
+
 // Select random word from word list and setting up the game
 function startGame() {
     // Disable hint button for 10 seconds
@@ -147,7 +176,7 @@ function startGame() {
     // Stop the previous audio
     if (audio !== undefined) stopAudio(audio);
 
-    openModalQueue("New Game Started !", "Guess new word !");
+    openModalQueue("New Game Started !", "Guess new word !", false);
 
     // Lancement du timer toutes les secondes (1000 millisecondes)
     timerInterval = setInterval(updateTime, 1000);
@@ -161,7 +190,7 @@ function startGame() {
     hintElement.style.opacity = "0";
 
     // Choose random word from word list and set up game
-    const randWord = cartoonList[Math.floor(Math.random() * cartoonList.length)];
+    randWord = cartoonList[Math.floor(Math.random() * cartoonList.length)];
     word = randWord.word;
 
     // Start the audio
@@ -236,7 +265,7 @@ function handleInput(e) {
     // Update remain guess and check for win/lose conditions
     guessLeft.innerText = maxGuesses;
     if (correctLetters.length === word.length - unalphabeticalChar) {
-        openModalQueue("You Win !", `You found the word ! It was ${word.toUpperCase()}`);
+        openModalQueue("You Win !", `You found the word ! It was ${word.toUpperCase()}`, true);
 
         // Stop the audio
         stopAudio(audio);
@@ -247,7 +276,7 @@ function handleInput(e) {
         // Start new game
         startGame();
     } else if (maxGuesses < 1) {
-        openModalQueue("You Lost !", "You don't have remaining guesses. Try again !");
+        openModalQueue("You Lost !", "You don't have remaining guesses. Try again !", false);
 
         // Reset score
         scoreValue = 0;
@@ -276,7 +305,7 @@ slider.addEventListener("input", audioVolume);
 inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
-openModalQueue("Welcome !", "Guess the cartoon by pressing the guess button !");
+openModalQueue("Welcome !", "Guess the cartoon by pressing the guess button !", false);
 
 // Start game
 startGame();
