@@ -41,7 +41,7 @@ function updateTime() {
 
         // Utilisation de l'attente avec async/await
         (async function () {
-            await attendreBoolenTrue();
+            await waitingForCloseModal();
 
             // Start game
             startGame();
@@ -169,6 +169,7 @@ function displayPicture() {
     picture.alt = randWord.word;
 }
 
+// Function who reset the cartoon's picture
 function resetPicture() {
     // Getting the cartoon's picture
     picture = document.getElementById("picture");
@@ -178,7 +179,8 @@ function resetPicture() {
     picture.alt = "";
 }
 
-function attendreBoolenTrue() {
+// Function who wait for the modal to be closed
+function waitingForCloseModal() {
     return new Promise(function (resolve) {
         if (isModalOpen === false) {
             resolve();
@@ -193,6 +195,7 @@ function attendreBoolenTrue() {
     });
 }
 
+// Function who launch the game by clicking on the button
 function launchGuess() {
     openModalQueue("New Game Started !", "Guess new word !", false);
 
@@ -201,7 +204,7 @@ function launchGuess() {
 
     // Utilisation de l'attente avec async/await
     (async function () {
-        await attendreBoolenTrue();
+        await waitingForCloseModal();
 
         // Start game
         startGame();
@@ -285,7 +288,6 @@ function startGame() {
 
 // Handle user input and update game
 function handleInput(e) {
-
     // Ignore non-alphabetical characters and letters that have already been guessed
     const key = e.target.value.toLowerCase();
     if (key.match(/^[a-z]+$/i) && !incorrectLetters.includes(`${key}`) && !correctLetters.includes(`${key}`)) {
@@ -330,7 +332,7 @@ function handleInput(e) {
 
         // Utilisation de l'attente avec async/await
         (async function () {
-            await attendreBoolenTrue();
+            await waitingForCloseModal();
 
             // Stop the audio
             stopAudio(audio);
@@ -378,7 +380,7 @@ openModalQueue("New Game Started !", "Guess new word !", false);
 
 // Utilisation de l'attente avec async/await
 (async function () {
-    await attendreBoolenTrue();
+    await waitingForCloseModal();
 
     // Start game
     startGame();
